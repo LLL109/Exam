@@ -72,7 +72,7 @@ class QuizView(View):
         u_id = py_obj['u_id']
         quiz_id = py_obj['quiz_id']
         page_index = py_obj['page_index']
-        qtype = py_obj['qtype'] 
+        qtype = py_obj['qtype']
         cache_key = f"quiz_{quiz_id}:question_id"
         cache.set(cache_key,[1,2,3,4,5,6,7],1800)
         question_id = cache.get(cache_key)[page_index]
