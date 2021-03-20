@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>比赛信息页</title>
+    <style>
+        li{
+            list-style: none;
+        }
+    </style>
+    <script src='/static/jquery-1.11.3.js'></script>
+</head>
+<body>
+    <h1>中华古诗词大会</h1>
+    <h3>xxx同学：你好！</h3>
+    <li>
+        <ul>出题机构：aaaa</ul>
+        <ul>题目总分：100</ul>
+        <ul>题目数量：55</ul>
+        <ul>题库大小：102</ul>
+        <ul>开始时间：xxxxxxx</ul>
+        <ul>结束时间:xxxxxxxx</ul>
+    </li>
+    <button id='challenge'>开始挑战</button>
+    <button id='rank'>查看排行榜</button>
+
+</body>
+    <script>
+        // var u_id = window.localStorage.getItem('quiz_uid')
+        // 测试考试id和考生id
+        var u_id = 1;
+        var quiz_id = 1 
+        var page_index = 0 
+        $.ajax({
+            url:`http://127.0.0.1:8000/quiz/info?u_id=${u_id}&quiz_id=${quiz_id}`,
+            type:'get',
+            contentType:"application/json",
+            dataType: 'json',
+            success: function(res){
+                if(res.code==200){
+                    var html = ""
+                    html+= `<h1>${res.data.quiz_name}</h1>`
+                    html+= `<h3>${res.data.username}同学：你好！</h3>`
+                    html+= '<li>'
+                    html+= `<ul>出题机构：${res.data.org_name}</ul>`
+                    html+= `<ul>题目总分：${res.data.total_score}</ul>`
+                    html+= `<ul>题目数量：：${parseInt(res.data.choice_num)+parseInt(res.data.fill_num)}</ul>`
+                    html+= `<ul>开始时间：${res.data.start_time}</ul>`
+                    html+= `<ul>结束时间${res.data.end_time}</ul>`
+                }else{
+                    alert(res.error)
+                }
+            }
+        })
+        $("#challenge").click(function(){
+            window.location=`/${quiz_id}/${page_index}/quiz`
+        })
+    </script>
+</html>

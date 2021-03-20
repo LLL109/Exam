@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<script src="/static/js/jquery-1.11.3.js"></script>
+<body>
+<!--{#<form action="http://127.0.0.1:8000/question_bank/choice" method="post" >#}-->
+<!--{#    <input type="radio" name="choice" value="choice">选择#}-->
+<!--{#    <input type="radio" name="blank" value="blank">填空#}-->
+<!--{#    <input type="submit">#}-->
+<!--{#</form>#}-->
+
+<a href="http://127.0.0.1:8000/question_bank/upload?type=dl">下载模板</a>
+
+题库名称<input type="text" id="bank_name">
+题库类型<input type="text" id="bank_type">
+<input type="file" id="question_bank">
+<button onclick="upload()">上传</button>
+
+<script>
+    function upload() {
+        formdata = new FormData();
+        var bank_name = $('#bank_name').val()
+        formdata.append('bank_name', bank_name)
+        var bank_type = $('#bank_type').val()
+        formdata.append('bank_type', bank_type)
+        formdata.append("question_bank", $("#question_bank")[0].files[0]);
+        var url = 'http://127.0.0.1:8000/question_bank/upload'
+        $.ajax({
+            processData: false,
+            contentType: false,
+            url: url,
+            type: 'post',
+            data: formdata,
+            //beforeSend: function (request) {
+            //    request.setRequestHeader("Authorization", token);
+            //},
+            success: function (arg) {
+                if (arg.code == 200) {
+                    alert('成功！')
+            //        window.location.reload()
+                } else {
+                    alert('失败！')
+                }
+            }
+        })
+    }
+
+</script>
+
+</body>
+</html>

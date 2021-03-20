@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>答题</title>
+
+
+    <style>
+        body {
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+        h4 {
+            color: blueviolet;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        div {
+            width: 600px;
+            /* background-color:greenyellow; */
+            margin: 0 auto
+        }
+
+        span {
+            float: right;
+        }
+
+        p {
+            margin-top: 40px;
+        }
+    </style>
+    <script src='/static/jquery-1.11.3.js'></script>
+</head>
+
+<body>
+
+</body>
+<script>
+    // var u_id = window.localStorage.getItem('quiz_uid') // 学生id
+    var url = document.location.toString();
+    console.log(url)
+    var arr_url = url.split('//')[1]
+    var quiz_id = arr_url.split('/')[1] //考试id
+    var page_index = parseInt(arr_url.split('/')[2])
+    var u_id = 10;
+    $.ajax({
+        url: `http://127.0.0.1:8000/quiz?u_id=${u_id}&quiz_id=${quiz_id}&page_index=${page_index}`,
+        //     beforeSend: function(request) {
+        //     request.setRequestHeader("Authorization", token);
+        // },
+        type: 'get',
+        success: function (res) {
+            if (res.code == 200) {
+                var ques_type = res.data.type
+                var quiz_name = res.data.quiz_name
+                var html = ""
+                html += `<h3>${quiz_name}</h3>`
+                    html += `<span class="time">倒计时:0时9分58秒</span>`
+                    html += `<div class=‘question’>`
+                if (res.data.type == 'choice') {
+                    // 选择题
+                    html += `<h4>${page_index+1}.(单选题)${res.data.question}</h4>`
+                    html += `<li>`
+                    html += `<ul><input type="radio" name='option' value='A' checked >A.${res.data.choice_A}</ul>`
+                    html += `<ul><input type="radio" name='option' value='B'>B.${res.data.choice_B} </ul>`
+                    html += `<ul><input type="radio" name='option' value='C'>C.${res.data.choice_C} </ul>`
+                    html += `<ul><input type="radio" name='option' value='D'>D.${res.data.choice_D}</ul>`
+                    html+='</li>'}
+                else{
+                    html += `<h4>${page_index+1}.(填空题)${res.data.question}</h4>`
+                    html += `<input type="text" class="form-control" id="fill_answer" placeholder="请输入答案"  style="width:400px" />`
+    
+                } 
+                html+=`<p class='button'>`
+                if(page_index>0){
+                    html+=`<button class='previous_pn' onclick=previous()>上一题</button>`
+                }
+                // console.log(res.data)
+                if(page_index+1<res.data.ques_num){
+                    html+=`<button class='next_pn' onclick=next()>下一题</button>`
+                }
+                html+=`<button id='submit' onclick=submit()>交卷</button><p></div>`
+    
+                $("body").append(html)
+                } else {
+                alert(res.error)
+                
+            }
+        }
+    })
+</script>
+<script>
+    function submit(){
+        var choice_answer =$('input:radio:checked').val()
+        console.log(choice_answer)
+        var fill_answer = $('#fill_answer').val() 
+        console.log(fill_answer)
+        if(choice_answer){
+            alert(choice_answer)
+        }else{
+            alert(fill_answer)
+        }
+    }
+    function send_ajax(){
+        var choice_answer =$('input:radio:checked').val()
+        var fill_answer = $('#fill_answer').val() 
+        if(choice_answer){
+            var qtype = 'choice'
+            var answer = choice_answer
+        }else{
+            var answer = fill_answer
+            var qtype = 'fill'
+        }
+        var json_data = {    
+            'u_id':u_id,
+            'quiz_id':quiz_id,
+            'page_index':page_index,
+            'answer': answer,
+            'qtype':qtype
+        }
+        $.ajax({
+            url: `http://127.0.0.1:8000/quiz/`,
+            type:'post',
+            contentType:"application/json",
+            dataType: 'json',
+            // beforeSend: function(request) {
+            //           request.setRequestHeader("Authorization", token);
+            //         },
+            data: JSON.stringify(json_data),
+            success:function(res){
+                if(res.code==200){
+                    alert('成功')
+                }
+            }
+        })
+    }
+    function previous(){
+        send_ajax()
+        
+        window.location=`/${quiz_id}/${page_index-1}/quiz`
+    }
+    function next(){
+        send_ajax()
+        window.location=`/${quiz_id}/${page_index+1}/quiz`
+    }
+    
+
+</script>
+</html>

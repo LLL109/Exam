@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='/static/jquery-1.11.3.js'></script>
+</head>
+<body>
+    <div><h2>xxx同学的成绩单</h2></div>
+    <div>得分:20.0分</div>
+    <div>耗时:43s</div>
+    <div>答对题数:2</div>
+    <div>答错题数:8</div>
+    <div>当前排名 第1名</div>
+</body>
+    <script>
+        var uid = window.localStorage.getItem(exam_uid)
+        $.ajax({
+
+            url: `http://127.0.0.1:8000/score/${uid}`,
+            type: 'get',
+            contentType: 'application/json',
+            dataType:'json',
+            success:function(res){
+                if(res.code==200){
+                    alert('成功')
+                }else{
+                    alert(res.error)
+                }
+                
+            }
+        })
+    </script>
+</html>
