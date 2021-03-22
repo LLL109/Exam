@@ -16,16 +16,22 @@
     <div>当前排名 第1名</div>
 </body>
     <script>
-        var uid = window.localStorage.getItem(exam_uid)
+        var u_id = window.localStorage.getItem(quiz_uid)
         $.ajax({
-
-            url: `http://127.0.0.1:8000/score/${uid}`,
+            url: `http://127.0.0.1:8000/quiz/score?u_id=${u_id}&quiz_id={}`,
             type: 'get',
             contentType: 'application/json',
             dataType:'json',
             success:function(res){
                 if(res.code==200){
-                    alert('成功')
+                    var html=""
+                    html +=`<div><h2>${res.data.username}同学的成绩单</h2></div>
+                            <div>得分:${res.data.score}分</div>
+                            <div>耗时:${res.data.quiz_time}</div>
+                            <div>答对题数:${res.data.correct}</div>
+                            <div>答错题数:${res.data.mistake}</div>
+                            <div>当前排名 ${res.data.rank}</div>`
+                    $(body).append(html)
                 }else{
                     alert(res.error)
                 }

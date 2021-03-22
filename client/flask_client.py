@@ -25,6 +25,11 @@ def quiz(quiz_id,page_index):
     #考试界面
     return send_file('templates/quiz.html')
 
+@app.route('/<u_id>/<quiz_id>/score')
+    #交卷页面
+def score(u_id,quiz_id):
+    return send_file('templates/score.html')
+
 
 
 

@@ -100,17 +100,6 @@
     })
 </script>
 <script>
-    function submit(){
-        var choice_answer =$('input:radio:checked').val()
-        console.log(choice_answer)
-        var fill_answer = $('#fill_answer').val() 
-        console.log(fill_answer)
-        if(choice_answer){
-            alert(choice_answer)
-        }else{
-            alert(fill_answer)
-        }
-    }
     function send_ajax(){
         var choice_answer =$('input:radio:checked').val()
         var fill_answer = $('#fill_answer').val() 
@@ -144,9 +133,13 @@
             }
         })
     }
+    function submit(){
+        send_ajax()
+        window.location=`/${u_id}/${quiz_id}/score`
+    }
+    
     function previous(){
         send_ajax()
-        
         window.location=`/${quiz_id}/${page_index-1}/quiz`
     }
     function next(){
